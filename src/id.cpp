@@ -1,7 +1,6 @@
 #include "id.h"
 #include "io.cpp"
 
-
 enum cmdList {ADD = 0, SUB, MUL, DIV,
               LDA, STO, RWD, WWD,
               BRU, BMI, HLT, VAR};
@@ -15,31 +14,26 @@ ID::ID(QString *mem, QString *acc)
     bus = new Bus(MBR, ACC);
 }
 
-bool ID::setCode(QString *IR, int *pc)
+void ID::setCode(QString *IR, int *pc)
 {
     PC      = pc;
     Opcode  = IR->mid(0,3);
-    Operand = IR->mid(4,10);
+    Operand = IR->mid(6,4);
     this->state = this->deCode();
-    return state;
 }
 
 bool ID::deCode()
 {
     if (Operand.isNull() || Opcode.isNull())
-    {
-        qDebug() << "There is no opcode or operand for this cmd!";
-        qDebug() << " Line:"<<*PC << Opcode << Operand;
         return false;
-    }
 
-    QString cmds[11] = {"ADD", "SUB", "MUL", "DIV",     // ALU  are 0 to 3
+    QString cmds[12] = {"ADD", "SUB", "MUL", "DIV",     // ALU  are 0 to 3
                         "LDA", "STO",                   // control bus
                         "RWD", "WWD",                   // state bus
                         "BRU", "BMI",                   // conditions
-                        "HLT"};                         // BYE signal
+                        "HLT", "000"};                  // BYE signal
 
-    for (int i=0; i<11; i++) // 0 to 11
+    for (int i=0; i<12; i++) // 0 to 11
     {
         if ( Opcode.compare(cmds[i], Qt::CaseSensitive) == 0 )
         {
@@ -48,13 +42,7 @@ bool ID::deCode()
         }
     }
 
-    if (!Operand.isEmpty() && !Operand.isNull())
-    {
-        this->cmd = VAR;
-        return true;
-    }
-
-    qDebug() << "On Line " << *PC <<":" << Opcode <<"Command not found!";
+    qDebug() << "Line" <<*PC <<":" <<"Command Not found!";
     return false;
 }
 
@@ -67,27 +55,26 @@ bool ID::run()
     {
 
     case -1:
-        qDebug() <<"no command here!";
+        qDebug() <<"No command here!";
         break;
 
     case ADD:
     case SUB:
     case MUL:
     case DIV:
+        if (ACC->isEmpty()) {
+            qDebug() << "ACC is empty!";
+            return false;
+        }
         alu->calc(cmd, MBR[Operand.toInt()].toInt());
-        //qDebug() << "CALC "<< Operand.toInt();
-
         break;
 
     case LDA: // load to acc
         bus->load(Operand.toInt());
-        //qDebug() << "LDA "<< Operand.toInt();
-
         break;
 
     case STO: // save from acc to mem
         bus->store(Operand.toInt());
-        //qDebug() << "STO "<< Operand.toInt();
         break;
 
     case RWD: // read from mem(i) and put it to acc
@@ -96,17 +83,14 @@ bool ID::run()
 
     case WWD: //write to mem from acc
         IO::output(&MBR[Operand.toInt()]); //**
-        //qDebug() << "WWD "<< Operand.toInt();
         break;
 
     case BRU: // jump without conditions
         this->jumpAnyway(Operand.toInt());
-        //qDebug() << "BRU " << Operand.toInt();
         break;
 
     case BMI: // jump if minus
         this->jumpIfMinus(Operand.toInt());
-        //qDebug() << "BMI "<< Operand.toInt();
         break;
 
     case HLT: // ~BYE

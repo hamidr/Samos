@@ -10,3 +10,5 @@ INCLUDEPATH += .
 # Input
 HEADERS += alu.h bus.h id.h io.h samos.h
 SOURCES += alu.cpp bus.cpp id.cpp io.cpp main.cpp samos.cpp
+
+CONFIG += console static

@@ -9,7 +9,6 @@
 #define ALU_H
 
 #include <QString>
-#include <QDebug>
 
 class ALU
 {

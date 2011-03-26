@@ -9,11 +9,9 @@ Bus::Bus(QString* mem, QString* acc)
 void Bus::load(int raw)
 {
     *ACC = MBR[raw];
-    //qDebug() <<"LDA:"<< *ACC <<MBR[raw] << raw;
 }
 
 void Bus::store(int raw)
 {
     MBR[raw] = *ACC ;
-    //qDebug() <<"STO:"<< *ACC <<MBR[raw] << raw;
 }

@@ -6,7 +6,8 @@
 *****/
 
 #include <QString>
-#include <QDebug>
+#include <QStringList>
+#include <QTextStream>
 #include <QFile>
 #include "id.h"
 
@@ -16,21 +17,21 @@
 class Samos
 {
 public:
-    Samos(QString*);
+    Samos();
     void run();
     bool exec(QString *, int*);
-    bool getMem(); // MBR
-    bool debug(QString, int);
+    void getFile(QString *); // MBR
     ~Samos();
 
 
 private:
-    QString *SamosFile;
-    QString *IR;
-    QString *ACC;
-    QString *MBR;
+    QString     *SamosFile;
+    QString     *ACC;
+    QString     *MBR;
+    QTextStream *qerr;
     ID *id;
     int PC;
+    bool isRunnable;
 };
 
 #endif // SAMUS_H

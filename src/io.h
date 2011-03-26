@@ -7,6 +7,8 @@
 
 #include <QString>
 #include <QDebug>
+#include <QTextStream>
+
 
 #ifndef IO_H
 #define IO_H

@@ -1,24 +1,30 @@
 #include "io.h"
-#include <iostream>
-
 IO::IO()
 {
 }
 
 void IO::input(QString *in)
 {
-    char s[10];
-    std::cin >> s;
-    QString temp(s);
+    QTextStream qin(stdin);
 
-    *in = temp.mid(0,10);
+    QString input;
+    qin >> input;
+    *in = "000000" + input.mid(input.size() - 4, 4);
 }
 
 void IO::output(QString *out)
 {
+    QTextStream qout(stdout);
     int number = out->toInt();
     if ( number )
-        qDebug() << number;
-    else
-        qDebug() << *out;
+        qout << number;
+    else {
+        QString temp = out->mid(6,4);
+        if ( temp == "000N" )
+            qout << '\n';
+        else if ( temp == "000S" )
+            qout << " ";
+        else
+            qout << temp;
+    }
 }
