@@ -27,15 +27,15 @@ bool ID::deCode()
     if (Operand.isNull() || Opcode.isNull())
         return false;
 
-    QString cmds[12] = {"ADD", "SUB", "MUL", "DIV",     // ALU  are 0 to 3
+    QString cmds[11] = {"ADD", "SUB", "MUL", "DIV",     // ALU  are 0 to 3
                         "LDA", "STO",                   // control bus
                         "RWD", "WWD",                   // state bus
                         "BRU", "BMI",                   // conditions
-                        "HLT", "000"};                  // BYE signal
+                        "HLT"};                  // BYE signal
 
-    for (int i=0; i<12; i++) // 0 to 11
+    for (int i=0; i<11; i++) // 0 to 11
     {
-        if ( Opcode.compare(cmds[i], Qt::CaseSensitive) == 0 )
+        if ( Opcode.compare(cmds[i], Qt::CaseInsensitive) == 0 )
         {
             this->cmd = i;
             return true;

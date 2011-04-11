@@ -67,6 +67,7 @@ Samos::~Samos()
         }
         *qerr <<"ACC"<<":\t"<< *ACC <<'\n';
     }
+
     delete[] MBR;
     delete qerr;
     delete id;

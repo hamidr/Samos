@@ -1,4 +1,5 @@
 #include "alu.h"
+#include <iostream>
 
 ALU::ALU(QString *acc)
 {
@@ -19,7 +20,12 @@ void ALU::calc( int cmd, int ARG )
         *ACC = QString::number(this->doMUL(ARG));
         break;
     case 3:
-        *ACC = QString::number(this->doDIV(ARG));
+		if ( ARG == 0 )
+		{
+			std::cout << "BUG: Div on Zero.\n";
+			break;
+		}
+		*ACC = QString::number(this->doDIV(ARG));
         break;
     }
 }
